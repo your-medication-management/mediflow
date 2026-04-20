@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediFlow — Smart Medication Management</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        :root {
+            --mint-green: #9EBFB8;
+            --medium-gray: #89939A;
+            --light-bg: #F7F9F9;
+            --dark-mint: #9EBFB8;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: #89939a;
+            background-color: var(--light-bg);
+            overflow-x: hidden;
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Nunito Sans', sans-serif;
+            font-weight: 700;
+        }
+
+        /* ── Navbar ── */
+        .navbar {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 1200px;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            border-radius: 50px;
+            padding: 7px 30px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+            z-index: 1000;
+            transition: top 0.4s cubic-bezier(0.25,1,0.3,1),
+                        opacity 0.4s cubic-bezier(0.25,1,0.3,1),
+                        background 0.3s ease,
+                        box-shadow 0.3s ease;
+        }
+
+        .navbar.scrolled {
+            background: rgba(255,255,255,0.95);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+        }
+
+        .navbar.nav-hidden {
+            top: -100px;
+            opacity: 0;
+        }
+
+        .navbar-brand {
+            font-family: 'Nunito Sans', sans-serif;
+            font-weight: 800;
+            color: var(--medium-gray) !important;
+            user-select: none;
+            text-decoration: none;
+            pointer-events: none;
+        }
+
+        .navbar-brand span {
+            margin-left: 52px;
+            font-size: 14.4px;
+            font-weight: 800;
+        }
+
+        .navbar-brand img {
+            height: 40px;
+            width: auto;
+            transform: scale(2.5);
+        }
+
+        .nav-link {
+            color: var(--medium-gray);
+            font-weight: 500;
+            margin: 0 15px;
+            transition: color 0.3s ease;
+            border-radius: 20px;
+            padding: 8px 20px !important;
+        }
+
+        .nav-link:hover {
+            color: var(--dark-mint);
+            background: rgba(156,197,176,0.1);
+        }
+
+        /* ── Hero ── */
+        .hero-section {
+            height: 100dvh;
+            background-image: url('https://imgs.search.brave.com/W7llspdu0dZ8JsxcbGlsyU4E0hgHLANDNVLu2JDhyY8/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvMTI4/NTMyOTQxNS9waG90/by9zZW5pb3Itd29t/YW4tcG9ydHJhaXQu/anBnP3M9NjEyeDYx/MiZ3PTAmaz0yMCZj/PXVFcTV5WkhyVi1n/VTVhem1xMjdSbzYx/VTFlSTVsLVZlWHlm/WGdSLU9ER289');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--medium-gray);
+            font-family: 'Nunito Sans', sans-serif;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background-color: rgba(247,249,249,0.2);
+            backdrop-filter: blur(5px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        .hero-logo {
+            max-width: 675px;
+            width: 100%;
+            margin-top: -110px;
+        }
+
+        .hero-statement {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: white;
+            margin: -100px 0 15px 0;
+            text-shadow: 0 3px 10px rgba(0,0,0,0.25);
+        }
+
+        .btn-hero {
+            background-color: var(--mint-green);
+            color: white;
+            padding: 12px 35px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.12);
+        }
+
+        .btn-hero:hover {
+            background-color: #7F9B94;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 14px 28px rgba(0,0,0,0.18);
+        }
+
+        /* ── Sections ── */
+        section { padding: 100px 0; }
+
+        .section-title {
+            font-size: 4rem;
+            color: var(--medium-gray);
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        /* ── Glass Card ── */
+        .glass-card {
+            background: rgba(255,255,255,0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 25px;
+            padding: 40px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 48px rgba(0,0,0,0.12);
+        }
+
+        /* ── Problem Section ── */
+        .problem-section { background: white; }
+
+        .problem-section p + p {
+            margin-top: 15px;
+            font-weight: 700;
+        }
+
+        .problem-illustration {
+            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .problem-image-wrapper {
+            overflow: hidden;
+            border-radius: 35px;
+            display: inline-block;
+        }
+
+        .problem-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 25px;
+            box-shadow: 10px 10px 20px rgba(0,0,0,0.2),
+                        5px 5px 15px rgba(0,0,0,0.1),
+                        0 0 30px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .problem-image:hover {
+            transform: scale(1.02);
+            box-shadow: 15px 15px 30px rgba(0,0,0,0.25),
+                        8px 8px 20px rgba(0,0,0,0.15),
+                        0 0 40px rgba(0,0,0,0.08);
+        }
+
+        /* ── Solution Section ── */
+        .solution-section { background: var(--light-bg); }
+
+        .product-showcase {
+            background: white;
+            border-radius: 30px;
+            padding: 60px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .product-showcase img {
+            max-width: 400px;
+            width: 100%;
+            margin-bottom: 30px;
+        }
+
+        /* ── Features Section ── */
+        .features-section { background: white; }
+
+        .feature-card { text-align: center; padding: 30px; }
+
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--mint-green), var(--dark-mint));
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 2rem;
+            color: white;
+            box-shadow: 0 8px 24px rgba(156,197,176,0.3);
+        }
+
+        .feature-card h4 { color: var(--medium-gray); margin-bottom: 15px; }
+
+        /* ── Users Section ── */
+        .users-section { background: var(--light-bg); }
+
+        .user-card {
+            position: relative;
+            border-radius: 25px;
+            overflow: hidden;
+            height: 350px;
+        }
+
+        .user-card-bg {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--mint-green), var(--dark-mint));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 6rem;
+            color: white;
+        }
+
+        .user-card-content {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            text-align: center;
+        }
+
+        .user-card-content h4 { color: var(--medium-gray); margin: 0; }
+
+        /* ── App Section ── */
+        .app-section { background: white; }
+
+        .phone-mockup {
+            background: var(--medium-gray);
+            border-radius: 40px;
+            padding: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            max-width: 300px;
+            margin: 0 auto;
+        }
+
+        .phone-screen {
+            background: linear-gradient(135deg, var(--mint-green), var(--dark-mint));
+            border-radius: 30px;
+            height: 600px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+        }
+
+        /* ── Mission Section ── */
+        .mission-section {
+            background: linear-gradient(135deg, var(--light-bg), white);
+            text-align: center;
+        }
+
+        .mission-content {
+            max-width: 800px;
+            margin: 0 auto;
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: var(--medium-gray);
+        }
+
+        /* ── CTA Section ── */
+        .cta-section {
+            background: linear-gradient(135deg, var(--mint-green), var(--dark-mint));
+            text-align: center;
+            color: white;
+        }
+
+        .cta-section h2 { color: white; margin-bottom: 2rem; }
+
+        .btn-cta {
+            background: white;
+            color: var(--mint-green);
+            padding: 15px 50px;
+            border-radius: 50px;
+            border: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+        }
+
+        .btn-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(0,0,0,0.3);
+        }
+
+        /* ── Footer ── */
+        footer {
+            background: #2C3539;
+            color: #B0B8BB;
+            padding: 60px 0 30px;
+        }
+
+        .footer-logo {
+            font-family: 'Nunito Sans', sans-serif;
+            font-weight: 800;
+            font-size: 0.9rem;
+            color: var(--mint-green);
+            margin-bottom: 20px;
+        }
+
+        .footer-contact { display: flex; flex-direction: column; gap: 10px; }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #B0B8BB;
+            font-size: 1rem;
+        }
+
+        .contact-item i { color: var(--mint-green); min-width: 20px; text-align: center; }
+        .contact-item:hover { color: var(--mint-green); }
+
+        .footer-links a {
+            color: #B0B8BB;
+            text-decoration: none;
+            margin: 0 15px;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover { color: var(--mint-green); }
+
+        .social-links a {
+            color: #B0B8BB;
+            font-size: 1.5rem;
+            margin: 0 10px;
+            transition: color 0.3s ease;
+        }
+
+        .social-links a:hover { color: var(--mint-green); }
+
+        /* ══════════════════════════════════
+           MOBILE  (≤768px)
+        ══════════════════════════════════ */
+        @media (max-width: 768px) {
+
+            /* Navbar */
+            .navbar {
+                width: 95%;
+                padding: 8px 16px;
+                border-radius: 30px;
+            }
+
+            .navbar-brand img { transform: scale(1.6); }
+            .navbar-brand span { margin-left: 30px; font-size: 12px; }
+            .nav-link { margin: 2px 0; padding: 6px 12px !important; }
+
+            /* Hero: remove negative margins, scale logo */
+            .hero-logo {
+                max-width: 85vw;
+                margin-top: 0;
+            }
+
+            .hero-statement {
+                font-size: 1rem;
+                margin: 10px 0 20px 0;
+            }
+
+            .btn-hero { padding: 10px 28px; font-size: 1rem; }
+
+            /* Sections */
+            section { padding: 60px 0; }
+            .section-title { font-size: 2rem; }
+            .glass-card { padding: 24px; }
+
+            /* Problem image */
+            .problem-image { max-height: 260px; }
+            .problem-illustration { margin-top: 30px; }
+
+            /* Solution */
+            .product-showcase { padding: 30px 20px; }
+
+            /* App section */
+            .phone-screen { height: 360px; }
+            .phone-mockup { max-width: 200px; margin-bottom: 40px; }
+            .app-section .section-title { text-align: center; margin-top: 20px; }
+
+            /* Mission */
+            .mission-content { font-size: 1rem; }
+
+            /* Footer */
+            .footer-logo img { height: 70px !important; }
+            .footer-links a { margin: 0 8px; font-size: 0.85rem; }
+            .social-links { margin-top: 16px; }
+        }
+
+        /* Tiny phones */
+        @media (max-width: 400px) {
+            .section-title { font-size: 1.6rem; }
+            .hero-statement { font-size: 0.9rem; }
+            .navbar-brand span { display: none; }
+        }
+    </style>
+</head>
+<body id="top">
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#top">
+                <img src="BEAM Logo.png" alt="BEAM Logo" style="margin-right: 10px; pointer-events: auto;">
+                <span>Smart. Precise. Effortless.</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#features">Features</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#app">App</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero-section" data-aos="fade-in">
+        <div class="hero-overlay">
+            <div class="hero-content">
+                <img src="BEAM Logo.png" alt="MediFlow Logo" class="hero-logo">
+                <p class="hero-statement">Your personal medication assistant that never forgets</p>
+                <button class="btn btn-hero" onclick="window.location.href='notify.html'">Join the Waitlist</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Problem -->
+    <section class="problem-section" id="problem">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6" data-aos="fade-up">
+                    <h2 class="section-title text-start">The Daily Medication Challenge</h2>
+                    <p class="lead">Managing multiple medications can be overwhelming. Forgetting doses, mixing up schedules, dealing with cluttered pill organizers — it's a daily struggle that affects millions.</p>
+                    <p>Whether you're caring for a loved one or managing your own health, the stress of keeping track of medications shouldn't add to your burden. There has to be a better way.</p>
+                </div>
+                <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
+                    <div class="problem-illustration">
+                        <div class="problem-image-wrapper">
+                            <img src="https://images.pexels.com/photos/3873168/pexels-photo-3873168.jpeg" alt="Medication illustration" class="problem-image">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Solution -->
+    <section class="solution-section" id="about">
+        <div class="container">
+            <h2 class="section-title" data-aos="fade-up">Meet MediFlow</h2>
+            <div class="product-showcase" data-aos="zoom-in">
+                <img src="https://cdn.gamma.app/btqti9q1h4vyc8h/generated-images/Qt8EHqh3D0r3RN-B4AG6D.png" alt="MediFlow Product">
+                <p class="lead">MediFlow is your automated medication companion — designed to deliver the right dose at the right time, every time. With precision engineering and intuitive controls, managing your medication has never been easier or more reliable.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section class="features-section" id="features">
+        <div class="container">
+            <h2 class="section-title" data-aos="fade-up">Powerful Features</h2>
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="0">
+                    <div class="glass-card feature-card">
+                        <div class="feature-icon"><i class="fas fa-clock"></i></div>
+                        <h4>Precise Timing</h4>
+                        <p>Automated dispensing at exactly the right moment, ensuring you never miss a dose.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="100">
+                    <div class="glass-card feature-card">
+                        <div class="feature-icon"><i class="fas fa-bell"></i></div>
+                        <h4>Smart Reminders</h4>
+                        <p>Gentle notifications and alerts keep you informed and on schedule.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="200">
+                    <div class="glass-card feature-card">
+                        <div class="feature-icon"><i class="fas fa-compress"></i></div>
+                        <h4>Compact Design</h4>
+                        <p>Sleek and space-saving, fitting perfectly into any home environment.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="300">
+                    <div class="glass-card feature-card">
+                        <div class="feature-icon"><i class="fas fa-hand-pointer"></i></div>
+                        <h4>Easy Touchscreen</h4>
+                        <p>Intuitive interface that anyone can use, regardless of tech experience.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="400">
+                    <div class="glass-card feature-card">
+                        <div class="feature-icon"><i class="fas fa-mobile-alt"></i></div>
+                        <h4>App Connectivity</h4>
+                        <p>Seamless integration with your smartphone for remote monitoring and control.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="500">
+                    <div class="glass-card feature-card">
+                        <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
+                        <h4>Reliable & Secure</h4>
+                        <p>Built with medical-grade precision and security you can trust.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Users -->
+    <section class="users-section" id="users">
+        <div class="container">
+            <h2 class="section-title" data-aos="fade-up">Who Benefits from MediFlow?</h2>
+            <div class="row g-4">
+                <div class="col-md-4" data-aos="zoom-in" data-aos-delay="0">
+                    <div class="glass-card user-card">
+                        <div class="user-card-bg"><i class="fas fa-user-friends"></i></div>
+                        <div class="user-card-content"><h4>Elderly Users</h4></div>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="zoom-in" data-aos-delay="100">
+                    <div class="glass-card user-card">
+                        <div class="user-card-bg"><i class="fas fa-heartbeat"></i></div>
+                        <div class="user-card-content"><h4>Chronic Patients</h4></div>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="zoom-in" data-aos-delay="200">
+                    <div class="glass-card user-card">
+                        <div class="user-card-bg"><i class="fas fa-hands-helping"></i></div>
+                        <div class="user-card-content"><h4>Caregivers</h4></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- App -->
+    <section class="app-section" id="app">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6" data-aos="fade-right">
+                    <div class="phone-mockup">
+                        <div class="phone-screen"><i class="fas fa-mobile-alt"></i></div>
+                    </div>
+                </div>
+                <div class="col-lg-6" data-aos="fade-left">
+                    <h2 class="section-title text-start">Stay Connected with the MediFlow App</h2>
+                    <div class="glass-card">
+                        <h4><i class="fas fa-calendar-check"></i> Schedule Management</h4>
+                        <p>Set up and adjust medication schedules from anywhere.</p>
+                        <h4 class="mt-4"><i class="fas fa-history"></i> Dose History</h4>
+                        <p>Track your medication history and adherence over time.</p>
+                        <h4 class="mt-4"><i class="fas fa-bell"></i> Smart Notifications</h4>
+                        <p>Receive reminders and alerts directly on your phone.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mission -->
+    <section class="mission-section" id="mission">
+        <div class="container">
+            <h2 class="section-title" data-aos="fade-up">Our Mission</h2>
+            <div class="mission-content" data-aos="fade-up" data-aos-delay="100">
+                <p>At MediFlow, our mission is to make daily medication simple, stress-free, and reliable. We believe that managing your health should never feel complicated — that's why we created MediFlow to bring clarity, comfort, and confidence to your everyday routine. Every dose, every time — effortlessly.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-section" id="contact">
+        <div class="container" data-aos="zoom-in">
+            <h2>Interested in MediFlow?</h2>
+            <p class="lead mb-4">Join the waitlist and be among the first to experience effortless medication management.</p>
+            <button class="btn btn-cta" onclick="window.location.href='notify.html'">Join the Waitlist</button>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="footer-logo">
+                        <img src="BEAM Logo.png" alt="MediFlow Logo" style="height: 105px; margin-right: 30px;">
+                        Smart. Precise. Effortless.
+                    </div>
+                    <div class="footer-contact">
+                        <div class="contact-item"><i class="fas fa-envelope"></i><span>info@mediflow.com</span></div>
+                        <div class="contact-item"><i class="fas fa-phone"></i><span>+1 (555) 123-4567</span></div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h5>Follow Us</h5>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+            </div>
+            <hr style="border-color: #4A5357; margin: 30px 0;">
+            <div class="row">
+                <div class="col-12 text-center footer-links">
+                    <a href="#">Impressum</a>
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-12 text-center">
+                    <p>© 2026 MediFlow. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({ duration: 800, once: true, offset: 100 });
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+
+        // Navbar hide/show on scroll
+        const navbar = document.querySelector('.navbar');
+        let lastScrollY = window.scrollY;
+
+        window.addEventListener('scroll', () => {
+            const currentScrollY = window.scrollY;
+
+            if (currentScrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+
+            if (currentScrollY < 100) {
+                navbar.classList.remove('nav-hidden');
+            } else if (currentScrollY > lastScrollY) {
+                navbar.classList.add('nav-hidden');
+            } else {
+                navbar.classList.remove('nav-hidden');
+            }
+
+            lastScrollY = currentScrollY;
+        });
+    </script>
+</body>
+</html>
